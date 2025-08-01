@@ -1,4 +1,6 @@
 @extends('layout.app')
+@section('title','Đăng nhập')
+
 @section('content')
     <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" id="kt_login">
         <!--begin::Aside-->
@@ -11,38 +13,50 @@
                 <!--begin::Signin-->
                 <div class="login-form login-signin">
                     <!--begin::Form-->
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            {{session('success')}}
+                    @if ($errors->has('message'))
+                        <div class="alert alert-danger">
+                            {{ $errors->first('message') }}
                         </div>
                     @endif
-                    <form class="form" action="{{route('login')}}" method="POST" novalidate="novalidate" id="kt_login_signin_form">
+
+                    @if ($errors->has('lock_time'))
+                        <div class="alert alert-danger" id="lock-message">
+                            {{$errors->first('lock_time')}}
+                        </div>
+                    @endif
+                    <form class="form" action="{{route('login.submit')}}" method="POST" novalidate="novalidate" id="">
                         <!--begin::Title-->
                         @csrf
                         <div class="pb-13 pt-lg-0 pt-5">
                             <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Welcome to Metronic</h3>
                             <span class="text-muted font-weight-bold font-size-h4">New Here?
-                            <a href="{{route('signup')}}" class="text-primary font-weight-bolder">Create an Account</a></span>
+                            <a href="{{route('signup.admin')}}" class="text-primary font-weight-bolder">Create an Account</a></span>
                         </div>
                         <!--begin::Title-->
                         <!--begin::Form group-->
                         <div class="form-group">
                             <label class="font-size-h6 font-weight-bolder text-dark">Email</label>
-                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="username" autocomplete="off" />
+                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="email" name="email" autocomplete="off" value="{{old('email')}}"/>
+                            @error('email')
+                                <p class="text-danger mt-3"> {{$message}} </p>
+                            @enderror
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
                         <div class="form-group">
                             <div class="d-flex justify-content-between mt-n5">
                                 <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-                                <a href="{{route('forgotpassword')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot Password ?</a>
+                                <a href="{{route('forgotpassword.admin')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot Password ?</a>
                             </div>
                             <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
+                            @error('password')
+                                <p class="text-danger mt-3"> {{$message}} </p>
+                            @enderror
                         </div>
                         <!--end::Form group-->
                         <!--begin::Action-->
                         <div class="pb-lg-0 pb-5">
-                            <button type="button" id="kt_login_signin_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
+                            <button type="submit" id="kt_login_signin_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
                             <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
                             <span class="svg-icon svg-icon-md">
                                 <!--begin::Svg Icon | path:assets/media/svg/social-icons/google.svg-->
@@ -70,4 +84,32 @@
         </div>
         <!--end::Content-->
     </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const lockMessage = document.getElementById('lock-message');
+        const loginButton = document.getElementById('kt_login_signin_submit');
+
+        if (lockMessage && lockMessage.textContent.includes("Vui lòng chờ")) {
+            const secondsMatch = lockMessage.textContent.match(/\d+/);
+            if (secondsMatch) {
+                let secondsLeft = parseInt(secondsMatch[0]);
+
+                loginButton.disabled = true;
+                const originalText = loginButton.textContent;
+
+                const countdown = setInterval(() => {
+                    if (secondsLeft <= 0) {
+                        clearInterval(countdown);
+                        loginButton.disabled = false;
+                        loginButton.textContent = originalText;
+                        lockMessage.style.display = 'none';
+                    } else {
+                        loginButton.textContent = `Vui lòng chờ (${secondsLeft}s)`;
+                        secondsLeft--;
+                    }
+                }, 1000);
+            }
+        }
+    });
+    </script>
 @endsection

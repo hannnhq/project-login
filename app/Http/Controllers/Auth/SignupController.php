@@ -8,10 +8,22 @@ use Illuminate\Http\Request;
 
 class SignupController extends Controller
 {
-    public function index(){
-        return view('auth.signup');
+    public function indexUser(){
+        return view('user.signup');
     }
-    public function store(Request $request){
+    public function indexAdmin(){
+        return view('admin.admin-signup');
+    }
+
+    public function storeUser(Request $request){
+        return $this->handleLogin($request, 'user');
+    }
+
+    public function storeAdmin(Request $request){
+        return $this->handleLogin($request, 'admin');
+    }
+
+    private function handleLogin(Request $request, string $role){
         // Validate dữ liệu
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -37,10 +49,12 @@ class SignupController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'address' => $request->address,
+            'role' => $role
         ]);
         // Gửi mail
         $user->sendEmailVerificationNotification();
 
+        session(['verification_user_id', $user->id]);
         return redirect()->route('verify.email')->with('message','Hãy kiểm tra email');
 
     }
@@ -49,19 +63,36 @@ class SignupController extends Controller
     public function verifyEmail(Request $request, $id, $hash){
         $user = User::findOrFail($id);
 
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        abort(403); // hash không đúng
-    }
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            abort(403); // hash không đúng
+        }
 
-    if (! $user->hasVerifiedEmail()) {
-        $user->markEmailAsVerified(); // cập nhật email_verified_at
-    }
-    return redirect()->route('login')->with('message','Đăng ký thành công');
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified(); // cập nhật email_verified_at
+        }
+        if($user->role === 'admin'){
+            return redirect()->route('login.admin')->with('message','Đăng ký tài khoản admin thành công');
+        }else{
+            return redirect()->route('login.user')->with('message','Đăng ký tài khoản thành công');
+        }
     }
 
     // gửi lại email
     public function send(Request $request){
-        $request->user()->sendEmailVerificationNotification();
+        $userId = session('verification_user_id');
+        if(!$userId){
+            return back()->withErrors(['message'=>'Không tìm thấy người dùng']);
+        }
+        $user = User::find($userId);
+
+        if(!$user){
+            return back()->withErrors(['mesage'=>'Người dùng không tồn tại']);
+        }
+        if($user->hasVerifiedEmail()){
+            return redirect()->route('login')->with('message','Tài khoản đã được xác minh');
+        }
+
+        $user->sendEmailVerificationNotification();
         return back()->with('message','Email xác minh đã được gửi');
     }
 }
