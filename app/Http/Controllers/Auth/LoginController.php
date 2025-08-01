@@ -115,7 +115,7 @@ class LoginController extends Controller
         $google2fa = new Google2FA();
         $secret = Crypt::decryptString($user->google2fa_secret);
 
-        if($google2fa->verifyKey($secret, $request->otp)){
+        if($google2fa->verifyKey($secret, $request->otp,4)){
             Auth::login($user);
             session()->forget('2fa:admin:id');
             return redirect()->route('admin.dashboard');
