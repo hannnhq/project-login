@@ -13,12 +13,24 @@ use PragmaRX\Google2FA\Google2FA;
 
 class LoginController extends Controller
 {
-    public function showFormUser(){
-        return view('user.login');
-    }
+    public function index(Request $request){
+        $email = $request->old('email'); // Lấy lại email đã nhập nếu có
 
-    public function showFormAdmin(){
-        return view('admin.login-admin');
+        if ($email) {
+            $lockKey = 'login_lock_' . $email;
+
+            if (Cache::has($lockKey)) {
+                $lockedUntil = Cache::get($lockKey); // Carbon
+                $secondsRemaining = now()->diffInSeconds($lockedUntil, false);
+
+                if ($secondsRemaining > 0) {
+                    session()->flash('lock_time', "Vui lòng chờ $secondsRemaining giây rồi thử lại.");
+                } else {
+                    Cache::forget($lockKey); // hết hạn thì xóa luôn
+                }
+            }
+        }
+        return view('auth.login');
     }
 
     public function login(Request $request){
@@ -37,27 +49,26 @@ class LoginController extends Controller
         if(!$user){
             return back()->withErrors(['email' => 'Email không tồn tại, vui lòng kiểm tra lại'])->withInput();
         }
-        if(!$user->is_active){
-            return back()->withErrors(['message' => 'Tài khoản bị khoá.']);
-        }
-        // Kiểm tra xem người dùng có đang bị khoá k
-        $attemptsKey = 'login_attempts_'. $email;
-        $lockKey = 'login_lock_'. $email;
-        $attempts = Cache::get($attemptsKey, 0);
 
-        // check bị khoá
+        if($user->is_active === 0){
+            return back()->withErrors(['message' => 'Tài khoản của bạn đã bị khoá']);
+        }
+
+        // tạo cache key
+        $attemptsKey = 'login_attempts_'. $email; // Đếm số lần sai
+        $lockKey = 'login_lock_'. $email; // Khóa tạm thời
+        $attempts = Cache::get($attemptsKey, 0); // Lấy số lần sai, mặc định là 0
+
+        // kiểm tra có đang bị khoá
         if (Cache::has($lockKey)) {
             $lockedUntil = Cache::get($lockKey); // timestamp
             $secondsRemaining = $lockedUntil - now()->timestamp;
 
             if ($secondsRemaining > 0) {
                 return back()->withErrors([
-                    'lock_time' => 'Vui lòng chờ ' . $secondsRemaining . ' giây rồi thử lại.',
+                    'lock_time' => 'Vui lòng chờ 60 giây rồi thử lại.',
                 ])->withInput();
             } else {
-                if($attempts >= 6){
-                    return back()->withErrors(['message'=>'Bạn nhập sai quá nhiều lần, vui lòng đặt lại mật khẩu']);
-                }
                 Cache::forget($lockKey);
             }
         }
@@ -69,9 +80,10 @@ class LoginController extends Controller
 
             if($attempts === 3){
                 $expiresAt = now()->addSeconds(60);
-                Cache::put($lockKey,$expiresAt->timestamp, $expiresAt); // khoá sau 3 lần
+                Cache::put($lockKey,$expiresAt, $expiresAt); // khoá sau 3 lần
             }
             if($attempts >= 6){
+                Cache::put($lockKey, now()->addMinutes(30)->timestamp, 1800); // khoá 30'
                 return back()->withErrors(['message'=>'Bạn đã nhập sai quá nhiều lần, vui lòng đặt lại mật khẩu']);
             }
 
@@ -84,15 +96,16 @@ class LoginController extends Controller
         Auth::login($user);
         if($user->role === "admin"){
             Auth::logout();
+                session(['2fa:admin:id' => $user->id]);
+
             if (!$user->google2fa_secret) {
                 // Chưa thiết lập 2FA → yêu cầu setup
-                session(['2fa:admin:id' => $user->id]);
                 return redirect()->route('2fa.setup');
             }
             session(['2fa:admin:id'=>$user->id]);
             return redirect()->route('2fa.form');
         }else{
-            return redirect()->route('user.dashboard');
+            return redirect()->route('user.home')->with('success','Đăng nhập thành công');
         }
     }
 
@@ -113,12 +126,11 @@ class LoginController extends Controller
         }
 
         $google2fa = new Google2FA();
-        $secret = Crypt::decryptString($user->google2fa_secret);
 
-        if($google2fa->verifyKey($secret, $request->otp,4)){
+        if($google2fa->verifyKey($user->google2fa_secret, $request->otp)){
             Auth::login($user);
             session()->forget('2fa:admin:id');
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập admin thành công');
         }else{
             return back()->withErrors(['otp'=>'Mã xác thực không đúng']);
         }

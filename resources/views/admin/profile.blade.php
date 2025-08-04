@@ -1,40 +1,26 @@
-@extends('admin.layout.app')
-@section('title','Thông tin cá nhân')
-@section('page-title','Thông tin tài khoản')
 
+@extends('admin.layout.app')
+@section('title',' Chỉnh sửa thông tin cá nhân')
+@section('page-title','Thông tin tài khoản')
 @section('content')
     <!--begin::Content-->
-
     <div class="flex-row-fluid ml-lg-8">
-            @if (session('success'))
-                    <div class="alert alert-custom alert-light-success fade show mb-10" role="alert">
-                        <div class="alert-text font-weight-bold">{{session('success')}}</div>
-                        <div class="alert-close">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">
-                                    <i class="ki ki-close"></i>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    @endif
         <!--begin::Card-->
         <div class="card card-custom card-stretch">
             <!--begin::Header-->
             <div class="card-header py-3">
                 <div class="card-title align-items-start flex-column">
                     <h3 class="card-label font-weight-bolder text-dark">Thông tin cá nhân</h3>
+                    <span class="text-muted font-weight-bold font-size-sm mt-1">Cập nhật thông tin cá nhân</span>
                 </div>
-                <div class="card-toolbar">
-                    <a href="{{route('admin.profile.edit')}}" class="btn btn-success mr-2">Chỉnh sửa thông tin</a>
-                </div>
+
             </div>
             <!--end::Header-->
             <!--begin::Form-->
-            <form class="form">
+            <form class="form" action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <!--begin::Body-->
                 <div class="card-body">
-
                     <div class="row">
                         <label class="col-xl-3"></label>
                         <div class="col-lg-9 col-xl-6">
@@ -44,16 +30,23 @@
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
                         <div class="col-lg-9 col-xl-6">
-                            <div class="image-input image-input-outline" id="kt_profile_avatar" style="background-image: url(assets/media/users/blank.png)">
-                                <div class="image-input-wrapper" style="background-image: url('{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('default-avatar.png') }}')"></div>
-                            </div>
+                        @if ($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" width="100" class="mb-2"><br>
+                        @endif
+                        <input type="file" name="avatar">
                         </div>
+                        @error('avatar')
+                            <div class="text-danger"> {{$message}} </div>
+                        @enderror
                     </div>
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">Họ tên</label>
                         <div class="col-lg-9 col-xl-6">
-                            <input class="form-control form-control-lg form-control-solid" name="name" type="text" value="{{ $user->name }}" disabled/>
+                            <input class="form-control form-control-lg form-control-solid" name="name" type="text" value="{{ old('name', $user->name) }}" />
                         </div>
+                        @error('name')
+                            <p class="text-danger"> {{$message}} </p>
+                        @enderror
                     </div>
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">Số điện thoại</label>
@@ -64,12 +57,16 @@
                                         <i class="la la-phone"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg form-control-solid" name="phone" value="{{ $user->phone ?? 'Chưa thiết lập' }}" placeholder="Phone" disabled/>
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Phone" />
+
                             </div>
+                            @error('phone')
+                                <p class="text-danger"> {{$message}} </p>
+                            @enderror
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">Email</label>
+                        <label class="col-xl-3 col-lg-3 col-form-label">Địa chỉ Email (Không thể sửa)</label>
                         <div class="col-lg-9 col-xl-6">
                             <div class="input-group input-group-lg input-group-solid">
                                 <div class="input-group-prepend">
@@ -77,7 +74,7 @@
                                         <i class="la la-at"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg form-control-solid" name="email" value="{{ $user->email }}" disabled />
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="email" value="{{ old('email', $user->email) }}" disabled />
                             </div>
                         </div>
                     </div>
@@ -85,15 +82,19 @@
                         <label class="col-xl-3 col-lg-3 col-form-label">Ngày sinh</label>
                         <div class="col-lg-9 col-xl-6">
                             <div class="input-group input-group-lg input-group-solid">
-                                <input type="date" class="form-control form-control-lg form-control-solid" name="dob" placeholder="Ngày sinh" value="{{ $user->dob ?? 'Chưa thiết lập' }}" disabled/>
+                                <input type="date" class="form-control form-control-lg form-control-solid" name="dob" placeholder="Ngày sinh" value="{{ old('dob', $user->dob) }}" />
                             </div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xl-3 col-lg-3 col-form-label">Địa chỉ</label>
                         <div class="col-lg-9 col-xl-6">
-                            <input class="form-control form-control-lg form-control-solid" name="address" type="text" value="{{ $user->address ?? 'Chưa thiết lập' }}" disabled/>
+                            <input class="form-control form-control-lg form-control-solid" name="address" type="text" value="{{ old('address', $user->address) }}" />
                         </div>
+                    </div>
+                    <div class="card-toolbar">
+                    <button type="submit" class="btn btn-success mr-2">Lưu thay đổi</button>
+                    <a href="{{route('admin.dashboard')}}" class="btn btn-secondary">Huỷ</a>
                     </div>
                 </div>
                 <!--end::Body-->

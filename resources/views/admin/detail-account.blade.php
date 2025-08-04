@@ -23,10 +23,7 @@
             <!--begin::Header-->
             <div class="card-header py-3">
                 <div class="card-title align-items-start flex-column">
-                    <h3 class="card-label font-weight-bolder text-dark">Thông tin cá nhân</h3>
-                </div>
-                <div class="card-toolbar">
-                    <a href="{{route('admin.profile.edit')}}" class="btn btn-success mr-2">Chỉnh sửa thông tin</a>
+                    <h3 class="card-label font-weight-bolder text-dark">Thông tin người dùng</h3>
                 </div>
             </div>
             <!--end::Header-->
@@ -53,6 +50,12 @@
                         <label class="col-xl-3 col-lg-3 col-form-label">Họ tên</label>
                         <div class="col-lg-9 col-xl-6">
                             <input class="form-control form-control-lg form-control-solid" name="name" type="text" value="{{ $user->name }}" disabled/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-lg-3 col-form-label">Vai trò</label>
+                        <div class="col-lg-9 col-xl-6">
+                            <input class="form-control form-control-lg form-control-solid" name="role" type="text" value="{{ $user->role }}" disabled/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -95,7 +98,13 @@
                             <input class="form-control form-control-lg form-control-solid" name="address" type="text" value="{{ $user->address ?? 'Chưa thiết lập' }}" disabled/>
                         </div>
                     </div>
+                                        <div class="card-toolbar">
+
+                    <a href="{{route('admin.list-account')}}" class="btn btn-secondary">Quay lại</a>
+                    </div>
                 </div>
+
+
                 <!--end::Body-->
             </form>
             <!--end::Form-->

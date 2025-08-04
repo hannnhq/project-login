@@ -11,7 +11,10 @@
                 <!--begin::Forgot-->
                 <div class="login-form login-forgot">
                     <!--begin::Form-->
-                    <form class="form" action="{{route('forgotpassword')}}" method="POST" novalidate="novalidate" id="kt_login_forgot_form">
+                    @if (session('success'))
+                        <p class="alert alert-success"> {{session('success')}} </p>
+                    @endif
+                    <form class="form" action="{{route('forgotpassword.send')}}" method="POST" novalidate="novalidate" id="kt_login_forgot_form">
                         <!--begin::Title-->
                         @csrf
                         <div class="pb-13 pt-lg-0 pt-5">

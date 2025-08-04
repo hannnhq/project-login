@@ -24,6 +24,7 @@
                         </div>
                         <!--begin::Title-->
                         <!--begin::Form group-->
+                        <p>Hãy vào app Google Authenticator để lấy mã xác thực</p>
                         <div class="form-group">
                             <label class="font-size-h6 font-weight-bolder text-dark">Mã xác thực</label>
                             <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="otp" autocomplete="off"/>

@@ -13,17 +13,23 @@
                 <!--begin::Signin-->
                 <div class="login-form login-signin">
                     <!--begin::Form-->
+                    @if (session('success'))
+                        <p class="alert alert-success"> {{session('success')}} </p>
+                    @endif
+                    @if (session('message'))
+                        <p class="alert alert-success"> {{session('message')}} </p>
+                    @endif
                     @if ($errors->has('message'))
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger" id="many-attempts">
                             {{ $errors->first('message') }}
                         </div>
                     @endif
-
-                    @if ($errors->has('lock_time'))
+                    @if (session('lock_time'))
                         <div class="alert alert-danger" id="lock-message">
-                            {{$errors->first('lock_time')}}
+                            {{ session('lock_time') }}
                         </div>
                     @endif
+
                     <form class="form" action="{{route('login.submit')}}" method="POST" novalidate="novalidate" id="">
                         <!--begin::Title-->
                         @csrf
@@ -46,7 +52,7 @@
                         <div class="form-group">
                             <div class="d-flex justify-content-between mt-n5">
                                 <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-                                <a href="{{route('forgotpassword.user')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot Password ?</a>
+                                <a href="{{route('forgotpassword')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot Password ?</a>
                             </div>
                             <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
                             @error('password')
@@ -104,11 +110,16 @@
                         loginButton.textContent = originalText;
                         lockMessage.style.display = 'none';
                     } else {
-                        loginButton.textContent = `Vui lòng chờ (${secondsLeft}s)`;
+                        loginButton.textContent = `${secondsLeft}s`;
                         secondsLeft--;
                     }
                 }, 1000);
             }
+        }
+        const manyAttempts = document.getElementById('many-attempts');
+        if(manyAttempts && manyAttempts.textContent.includes('quá nhiều lần')){
+            loginButton.disabled = true;
+            loginButton.textContent = 'Khoá';
         }
     });
     </script>

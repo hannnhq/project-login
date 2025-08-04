@@ -13,6 +13,9 @@
                 <!--begin::Signin-->
                 <div class="login-form login-signin">
                     <!--begin::Form-->
+                    @if (session('message'))
+                        <p class="alert alert-success"> {{session('message')}} </p>
+                    @endif
                     @if ($errors->has('message'))
                         <div class="alert alert-danger">
                             {{ $errors->first('message') }}
@@ -112,4 +115,3 @@
         }
     });
     </script>
-@endsection

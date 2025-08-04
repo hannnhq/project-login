@@ -18,13 +18,11 @@
                     <p class="text-muted mb-5">Quét mã QR bên dưới bằng ứng dụng Google Authenticator:</p>
 
                     <div class="d-flex justify-content-center mb-5">
-                        <img src="{{ $qrImage }}" alt="">
+                        <img src="{{ $qrCodeUrl }}">
                     </div>
-
-                    <p class="text-muted">Nếu không quét được, hãy nhập mã sau vào app:</p>
-                    <div class="alert alert-secondary d-inline-block px-4 py-2 mb-5">
-                        <code class="text-dark font-weight-bold">{{ $secret }}</code>
-                    </div>
+                    <p>Nếu bạn không quét được mã vui lòng nhập mã secret dưới đây</p>
+                    <p><strong>Tên mã: {{$email}}</strong></p>
+                    <p><strong>Mã bí mật:</strong> {{ $secret }}</p>
 
                     <p class="text-muted">Sau khi thiết lập, hãy nhập mã OTP để xác thực.</p>
 
