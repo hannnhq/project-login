@@ -20,8 +20,8 @@ class LoginController extends Controller
             $lockKey = 'login_lock_' . $email;
 
             if (Cache::has($lockKey)) {
-                $lockedUntil = Cache::get($lockKey); // Carbon
-                $secondsRemaining = now()->diffInSeconds($lockedUntil, false);
+                $lockedUntil = Cache::get($lockKey); // timestampt
+                $secondsRemaining = $lockedUntil - now()->timestamp;
 
                 if ($secondsRemaining > 0) {
                     session()->flash('lock_time', "Vui lòng chờ $secondsRemaining giây rồi thử lại.");
@@ -80,7 +80,7 @@ class LoginController extends Controller
 
             if($attempts === 3){
                 $expiresAt = now()->addSeconds(60);
-                Cache::put($lockKey,$expiresAt, $expiresAt); // khoá sau 3 lần
+                Cache::put($lockKey,$expiresAt->timestamp, 60); // khoá sau 3 lần
             }
             if($attempts >= 6){
                 Cache::put($lockKey, now()->addMinutes(30)->timestamp, 1800); // khoá 30'
