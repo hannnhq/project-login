@@ -81,7 +81,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->role }}</td>
-                            <td>{{ $user->created_at->format('d/m/y H:i:s') }}</td>
+                            <td>{{ $user->created_at->format('d/m/Y H:i:s') }}</td>
                             <td>
                                 <span class="badge {{ $user->is_active ? 'badge-success' : 'badge-danger' }}">
                                     {{$user->is_active ? 'Hoạt động' : 'Bị khoá'}}
@@ -108,6 +108,7 @@
                 </table>
                 <form id="statusForm" method="POST" style="display: none;">
                     @csrf
+                    <input type="hidden" name="action" id="actionInput">
                 </form>
 
                 {{-- Phân trang --}}
@@ -166,6 +167,7 @@
             if(result.isConfirmed){
                 const form = document.getElementById('statusForm');
                 form.action = config[actionType].actionUrl;
+                document.getElementById('actionInput').value = actionType;
                 form.submit();
             }
         });

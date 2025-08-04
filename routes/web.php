@@ -10,6 +10,9 @@ use App\Http\Controllers\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+Route::get('/', function(){
+    return view('home');
+});
 
 Route::middleware(['auth','is_user'])->group(function() {
     Route::get('/home', [HomeController::class, 'index'])->name('user.home');
@@ -31,8 +34,8 @@ Route::middleware(['auth','is_admin'])->group(function(){
 
     Route::get('/admin/list-account', [AdminDashboardController::class, 'listAccount'])->name('admin.list-account');
     Route::get('/admin/account/{id}/detail', [AdminDashboardController::class, 'detailAccount'])->name('admin.detail-account');
-    Route::post('/admin/account/{id}/lock', [AdminDashboardController::class, 'updateAccountStatus'])->name('account.lock');
-    Route::post('/admin/account/{id}/unlock', [AdminDashboardController::class, 'updateAccountStatus'])->name('account.unlock');
+    Route::post('/admin/account/{id}/lock', [AdminDashboardController::class, 'updateAccountStatus']);
+    Route::post('/admin/account/{id}/unlock', [AdminDashboardController::class, 'updateAccountStatus']);
 });
 
 Route::get('/login',[LoginController::class, 'index'])->name('login');
@@ -59,7 +62,7 @@ Route::get('/verify-email',function(){
     return view('auth.verifyEmail');
 })->name('verify.email');
 
-Route::get('/email/verify/{id}/{hash}', [SignupController::class , 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [SignupController::class , 'verifyEmail'])->middleware(['auth','signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', [SignupController::class, 'send'])->middleware(['auth','throttle:1,1'])->name('verification.send');
 

@@ -76,6 +76,10 @@ class SignupController extends Controller
     public function verifyEmail(Request $request, $id, $hash){
         $user = User::findOrFail($id);
 
+        if(!Auth::check()){
+            Auth::login($user);
+        }
+        // Xác minh hash
         if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             abort(403); // hash không đúng
         }

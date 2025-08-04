@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmailNotification extends Notification
+class VerifyEmailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -43,18 +43,20 @@ class VerifyEmailNotification extends Notification
             ->line('Bạn đã đăng ký tài khoản')
             ->line('Vui lòng nhấp vào xác minh email ở bên dưới')
             ->action('Xác minh email', $verificationUrl)
+            ->line('Url có hiệu lực trong vòng 10 phút')
             ->line('Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi, chúc bạn một ngày tốt lành!');
     }
 
     protected function verificationUrl($notifiable) {
         $temporarySignedUrl = URL::temporarySignedRoute(
             'verification.verify',
-            Carbon::now()->addMinutes(60),
+            Carbon::now()->addMinutes(10),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification())
             ]
         );
+        dd($temporarySignedUrl);
         return $temporarySignedUrl;
 
     }

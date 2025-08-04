@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
-    public function showFormForgot(){
+    public function showFormForgot(Request $request){
         return view('auth.forgotpass');
     }
 
@@ -20,7 +21,7 @@ class ForgotPasswordController extends Controller
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ],[
-            'email. required' => 'Email không để trống',
+            'email.required' => 'Email không để trống',
             'email.exists' => 'Email không tồn tại'
         ]);
 
@@ -28,9 +29,9 @@ class ForgotPasswordController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         if($status === Password::RESET_LINK_SENT){
-            return back()->with('success', __($status));
+            return back()->with('success', 'Gửi link đặt lại mật khẩu đến email thành công');
         }
-        return back()->withErrors(['email'=>__($status)]);
+        return back()->withErrors(['email'=> 'Có lỗi ']);
     }
 
     public function showFormReset(Request $request, $token){

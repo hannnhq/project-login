@@ -14,23 +14,29 @@
                     @if (session('success'))
                         <p class="alert alert-success"> {{session('success')}} </p>
                     @endif
+                    @if (session('message'))
+                        <p class="alert alert-success"> {{session('message')}} </p>
+                    @endif
                     <form class="form" action="{{route('forgotpassword.send')}}" method="POST" novalidate="novalidate" id="kt_login_forgot_form">
                         <!--begin::Title-->
                         @csrf
                         <div class="pb-13 pt-lg-0 pt-5">
-                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Forgotten Password ?</h3>
-                            <p class="text-muted font-weight-bold font-size-h4">Enter your email to reset your password</p>
+                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Quên mật khẩu?</h3>
+                            <p class="text-muted font-weight-bold font-size-h4">Nhập email của bạn để đặt lại mật khẩu</p>
                         </div>
                         <!--end::Title-->
                         <!--begin::Form group-->
                         <div class="form-group">
-                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" placeholder="Email" name="email" autocomplete="off" />
+                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" value="{{old('email')}}" type="email" placeholder="Email" name="email" autocomplete="off" />
+                            @error ('email')
+                                <div class="text-danger">{{$message}}</div>
+                            @enderror
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0">
-                            <button type="submit" id="kt_login_forgot_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
-                            <a href="{{route('login')}}" id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</a>
+                            <button type="submit" id="kt_login_forgot_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Gửi</button>
+                            <a href="{{route('login')}}" id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Huỷ</a>
                         </div>
                         <!--end::Form group-->
                     </form>
