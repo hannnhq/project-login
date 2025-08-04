@@ -38,15 +38,21 @@
                         <!--end::Form group-->
                         <!--begin::Form group-->
                         <div class="form-group">
-                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" value="{{old('password')}}" type="password" placeholder="Mật khẩu" name="password" autocomplete="off"/>
+                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Mật khẩu" name="password" autocomplete="off"/>
                             @error('password')
+                                <p class="text-danger mt-2">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="Nhập lại mật khẩu" name="cpassword" autocomplete="off"/>
+                            @error('cpassword')
                                 <p class="text-danger mt-2">{{$message}}</p>
                             @enderror
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
                         <div class="form-group">
-                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="address" placeholder="Địa chỉ" name="address" autocomplete="off" >
+                            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" value="{{old('address')}}" type="address" placeholder="Địa chỉ" name="address" autocomplete="off" >
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
@@ -60,7 +66,7 @@
                         <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
                             <button type="submit" id="kt_login_signup_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
-                            <a href="{{route('login.admin')}}" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</a>
+                            <a href="{{route('login')}}" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</a>
                         </div>
                         <!--end::Form group-->
                     </form>
