@@ -116,18 +116,21 @@ class DashboardController extends Controller
                 $user->is_active = 0;
                 $message = 'Khoá tài khoản thành công';
                 $logMessage = "Admin {$admin->email} đã khoá tài khoản {$user->email} vào lúc ". now();
-            }else{
+            }elseif($action === 'unlock'){
                 if($user->is_active === 1){
                     return back()->withErrors(['message'=>'Tài khoản đang hoạt động']);
                 }
                 $user->is_active = 1;
                 $message = 'Kích hoạt tài khoản thành công';
                 $logMessage = "Admin {$admin->email} đã kích hoạt tài khoản {$user->email} vào lúc ". now();
+            }else {
+                return back()->withErrors(['message'=>'Hành động không hợp lệ']);
             }
+
             $user->Save();
 
             // Ghi Log hành động
-            Log::channel('sercurity')->info($logMessage);
+            Log::channel('security')->info($logMessage);
 
             return back()->with('success',$message);
         } catch (\Exception $e) {

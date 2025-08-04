@@ -16,8 +16,8 @@
                         <!--begin::Title-->
                         @csrf
                         <div class="pb-13 pt-lg-0 pt-5">
-                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Sign Up To Admin</h3>
-                            <p class="text-muted font-weight-bold font-size-h4">Enter your details to create your account</p>
+                            <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Đăng ký quản trị viên</h3>
+                            <p class="text-muted font-weight-bold font-size-h4">Nhập thông tin của bạn để tạo tài khoản</p>
                         </div>
                         <!--end::Title-->
                         <!--begin::Form group-->
@@ -56,17 +56,9 @@
                         </div>
                         <!--end::Form group-->
                         <!--begin::Form group-->
-                        <div class="form-group">
-                            <label class="checkbox mb-0">
-                            <input type="checkbox" name="agree" />I Agree the
-                            <a href="#">terms and conditions</a>.
-                            <span></span></label>
-                        </div>
-                        <!--end::Form group-->
-                        <!--begin::Form group-->
                         <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
-                            <button type="submit" id="kt_login_signup_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
-                            <a href="{{route('login')}}" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</a>
+                            <button type="submit" id="kt_login_signup_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Đăng ký</button>
+                            <a href="{{route('login')}}" id="kt_login_signup_cancel" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Huỷ</a>
                         </div>
                         <!--end::Form group-->
                     </form>
