@@ -112,7 +112,7 @@
                 </form>
 
                 {{-- Phân trang --}}
-                <div class="mt-3">
+                <div class="mt-3 d-flex justify-content-center">
                     {{$listAccount->withQueryString()->links()}}
                 </div>
                 <!--end::Search Form-->

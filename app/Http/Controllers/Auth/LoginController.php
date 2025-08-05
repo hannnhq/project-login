@@ -53,6 +53,10 @@ class LoginController extends Controller
         if($user->is_active === 0){
             return back()->withErrors(['message' => 'Tài khoản của bạn đã bị khoá']);
         }
+        // Kiểm tra người dùng đã xác thực email
+        if (is_null($user->email_verified_at)) {
+            return back()->withErrors(['message' => 'Tài khoản chưa xác thực email. Vui lòng kiểm tra email để xác nhận tài khoản.'])->withInput();
+        }
 
         // tạo cache key
         $attemptsKey = 'login_attempts_'. $email; // Đếm số lần sai

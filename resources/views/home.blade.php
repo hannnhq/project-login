@@ -35,12 +35,12 @@
                         @csrf
                         <div class="pb-13 pt-lg-0 pt-5">
                             <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Chào mừng bạn đến với HQ Group</h3>
-                            <span class="text-muted font-weight-bold font-size-h4">Chúc bạn một ngày tốt lạnh!</span>
+                            <span class="text-muted font-weight-bold font-size-h4">Chúc bạn một ngày tốt lành!</span>
                         </div>
 
                         <div class="pb-lg-0 pb-5">
-                        <a href="{{route('login')}}" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</a>
-                        <a href="{{route('signup.user')}}" class="btn btn-warning font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign Up</a>
+                        <a href="{{route('login')}}" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Đăng nhập</a>
+                        <a href="{{route('signup.user')}}" class="btn btn-warning font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Đăng ký</a>
                         </div>
                         <!--end::Action-->
                     </form>
