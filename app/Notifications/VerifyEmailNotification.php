@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmailNotification extends Notification implements ShouldQueue
+class VerifyEmailNotification extends Notification
 {
     use Queueable;
 
@@ -56,7 +56,6 @@ class VerifyEmailNotification extends Notification implements ShouldQueue
                 'hash' => sha1($notifiable->getEmailForVerification())
             ]
         );
-        dd($temporarySignedUrl);
         return $temporarySignedUrl;
 
     }
