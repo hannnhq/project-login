@@ -55,7 +55,7 @@ Route::post('/admin/signup',[SignupController::class, 'storeAdmin'])->name('sign
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect()->route('login');
+    return redirect()->route('login')->with('success', 'Đăng xuất thành công');
 })->name('logout');
 
 Route::get('/verify-email',function(){

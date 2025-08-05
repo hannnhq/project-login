@@ -6,9 +6,9 @@
         <!--begin::Container-->
         <div class="container-fluid d-flex align-items-stretch justify-content-between">
             <div class="topbar">
-                <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn đăng xuất?')">
+                <form action="{{ route('logout') }}" method="POST" id="logout-form">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-light-danger mt-5">Đăng xuất</button>
+                    <button type="button" class="btn btn-sm btn-light-danger mt-5" onclick="confirmLogout()">Đăng xuất</button>
                 </form>
                 <!--begin::Search-->
                 <div class="dropdown" id="kt_quick_search_toggle">
@@ -209,4 +209,21 @@
         <!--end::Entry-->
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmLogout(){
+        Swal.fire({
+            title: 'Bạn chắc chắn muốn đăng xuất',
+            icon: 'question',
+            confirmButtonText: 'Đăng xuất',
+            cancelButtonText: 'Huỷ',
+            showCancelButton: true
+        }).then((result)=>{
+            if(result.isConfirmed){
+                document.getElementById('logout-form').submit();
+            }
+        });
+    }
+</script>
 @endsection

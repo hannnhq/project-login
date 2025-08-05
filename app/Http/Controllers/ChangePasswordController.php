@@ -54,6 +54,6 @@ class ChangePasswordController extends Controller
         if($user->role === 'admin'){
             return redirect()->route('admin.dashboard')->with('success', 'Đổi mật khẩu thành công');
         }
-        return redirect()->route('user.dashboard')->with('success', 'Đổi mật khẩu thành công');
+        return redirect()->route('user.home')->with('success', 'Đổi mật khẩu thành công');
     }
 }
