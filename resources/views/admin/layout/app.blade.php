@@ -122,9 +122,9 @@ License: You must have a valid license purchased only from themeforest(the above
 							<!--end::Header Menu Wrapper-->
 							<!--begin::Topbar-->
 							<div class="topbar">
-                                <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn đăng xuất?')">
+                                <form action="{{ route('logout') }}" method="POST" id="logout-form">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-light-danger mt-5">Đăng xuất</button>
+                                    <button type="button" class="btn btn-sm btn-light-danger mt-5" onclick="confirmLogout()">Đăng xuất</button>
                                 </form>
 								<!--begin::Search-->
 								<div class="dropdown" id="kt_quick_search_toggle">
@@ -260,6 +260,21 @@ License: You must have a valid license purchased only from themeforest(the above
 		<script src="{{asset('assets/js/pages/widgets.js')}}"></script>
 		<script src="{{asset('assets/js/pages/custom/profile/profile.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function confirmLogout(){
+                Swal.fire({
+                    title: 'Bạn chắc chắn muốn đăng xuất',
+                    icon: 'question',
+                    confirmButtonText: 'Đăng xuất',
+                    cancelButtonText: 'Huỷ',
+                    showCancelButton: true
+                }).then((result)=>{
+                    if(result.isConfirmed){
+                        document.getElementById('logout-form').submit();
+                    }
+                });
+            }
+        </script>
 		<!--end::Page Scripts-->
 	</body>
 	<!--end::Body-->

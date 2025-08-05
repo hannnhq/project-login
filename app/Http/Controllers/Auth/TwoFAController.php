@@ -48,6 +48,9 @@ class TwoFAController extends Controller
     public function verifySetup(Request $request){
         $request->validate([
             'otp' => 'required|digits:6'
+        ],[
+            'otp.required' =>'Mã xác thực không để trống',
+            'otp.digits' =>'Mã xác thực gồm 6 số',
         ]);
 
         $userId = session('2fa:admin:id');
@@ -62,7 +65,7 @@ class TwoFAController extends Controller
 
         if ($google2fa->verifyKey($user->google2fa_secret, $request->otp)) {
             // Đánh dấu 2FA đã được thiết lập
-            $user->google2fa_enabled = true;
+            $user->is_google2fa_enabled = true;
             $user->save();
 
             Auth::login($user);

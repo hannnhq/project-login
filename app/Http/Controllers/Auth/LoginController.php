@@ -116,6 +116,9 @@ class LoginController extends Controller
     public function verify(Request $request){
         $request->validate([
             'otp' => 'required|digits:6'
+        ],[
+            'otp.required' =>'Mã xác thực không để trống',
+            'otp.digits' =>'Mã xác thực gồm 6 số',
         ]);
 
         $userId = session('2fa:admin:id');

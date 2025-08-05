@@ -91,7 +91,7 @@
         <!--end::Content-->
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         const lockMessage = document.getElementById('lock-message');
         const loginButton = document.getElementById('kt_login_signin_submit');
 
