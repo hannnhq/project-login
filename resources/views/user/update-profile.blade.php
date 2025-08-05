@@ -1,9 +1,4 @@
-{{-- <h1>Đây là trang chủ</h1>
-<a href="{{route('changepassword.user.form')}}">Đổi mật khẩu</a>
-@if (session('success'))
-    <p class="alert alert-success"> {{session('success')}} </p>
-@endif
-<h3>Xin chào {{ $user->name }}</h3> --}}
+
 @extends('layout.app')
 @section('content')
 <div class="container">
@@ -13,9 +8,9 @@
         <div class="container-fluid d-flex align-items-stretch justify-content-between">
             <!--begin::Topbar-->
             <div class="topbar">
-                <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn đăng xuất?')">
+                <form action="{{ route('logout') }}" method="POST" id="logout-form">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-light-danger mt-5">Đăng xuất</button>
+                    <button type="button" class="btn btn-sm btn-light-danger mt-5" onclick="confirmLogout()">Đăng xuất</button>
                 </form>
                 <!--begin::Search-->
                 <div class="dropdown" id="kt_quick_search_toggle">
@@ -228,3 +223,19 @@
     </div>
 </div>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmLogout(){
+        Swal.fire({
+            title: 'Bạn chắc chắn muốn đăng xuất',
+            icon: 'question',
+            confirmButtonText: 'Đăng xuất',
+            cancelButtonText: 'Huỷ',
+            showCancelButton: true
+        }).then((result)=>{
+            if(result.isConfirmed){
+                document.getElementById('logout-form').submit();
+            }
+        });
+    }
+</script>
