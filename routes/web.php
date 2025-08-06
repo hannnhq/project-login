@@ -34,6 +34,7 @@ Route::middleware(['auth','is_admin'])->group(function(){
 
     Route::get('/admin/list-account', [AdminDashboardController::class, 'listAccount'])->name('admin.list-account');
     Route::get('/admin/account/{id}/detail', [AdminDashboardController::class, 'detailAccount'])->name('admin.detail-account');
+    Route::delete('/admin/account/{id}/destroy',[AdminDashboardController::class, 'destroy'])->name('admin.account.destroy');
     Route::post('/admin/account/{id}/lock', [AdminDashboardController::class, 'updateAccountStatus']);
     Route::post('/admin/account/{id}/unlock', [AdminDashboardController::class, 'updateAccountStatus']);
 });

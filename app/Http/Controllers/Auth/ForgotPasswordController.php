@@ -57,10 +57,12 @@ class ForgotPasswordController extends Controller
         ],[
             'password.regex' => 'Mật khẩu phải chưa ít nhất 1 chữ in hoa, 1 chữ in thường, 1 số, 1 kí tự đặc biệt'
         ]);
-
+        //Kiểm tra token reset password
         $status = Password::reset(
+            // Lấy đúng 4 field từ form
             $request->only('email','password','password_confirmation','token'),
             function($user,$password){
+                 // Đặt lại mật khẩu đã hash và nhớ đăng nhập mới
                 $user->forceFill([
                     'password' => Hash::make($password),
                     'remember_token' => Str::random(60),
