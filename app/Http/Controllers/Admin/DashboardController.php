@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
@@ -144,5 +145,25 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['message'=>'Không tìm thấy tài khoản']);
         }
         return view('admin.detail-account', compact('user'));
+    }
+
+    public function destroy($id){
+        Log::info("Gọi tới tài khoản id->$id");
+
+        $user = User::findOrFail($id);
+        // Xoá ảnh
+        if($user->avatar && Storage::disk('public')->exists($user->avatar)){
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // KHông cho admin tự xoá mình
+        if(Auth::id() == $user->id){
+            Log::warning("Admin đang xoá chính mình id = $id");
+            return back()->withErrors(['message' => 'Không thể tự xoá mình']);
+        }
+
+        $user->delete();
+        Log::info("Đã xoá tài khoản id=$id thành công");
+        return back()->with('success','Xoá thành công');
     }
 }

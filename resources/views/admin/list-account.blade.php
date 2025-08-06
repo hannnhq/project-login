@@ -88,6 +88,7 @@
                                 </span>
                             </td>
                             <td>
+                                <div class="d-flex justify-content-around">
                                 @if ($user->is_active)
                                     <button type="button" class="btn btn-sm btn-danger"
                                     onclick="confirmAction({{$user->id}}, '{{$user->email}}', 'lock')">Khoá</button>
@@ -97,6 +98,12 @@
                                     </button>
                                 @endif
                                 <a href="{{route('admin.detail-account', $user->id)}}" class="btn btn-sm btn-warning">Xem</a>
+                                <form action="{{route('admin.account.destroy',$user->id)}}" method="POST" id="destroy-form-{{$user->id}}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-info" onclick="confirmDestroy({{$user->id}})">Xoá</button>
+                                </form>
+                                </div>
                             </td>
                         </tr>
                         @empty
@@ -134,6 +141,7 @@
 </style>
 
 <script>
+
     function confirmAction(userId, email, actionType){
         let config = {
             lock: {
@@ -149,7 +157,7 @@
                 actionUrl: `/admin/account/${userId}/unlock`,
                 buttonClass: 'btn btn-success',
                 icon: 'question'
-            }
+            },
         };
         Swal.fire({
             title: config[actionType].title,
@@ -169,6 +177,20 @@
                 form.action = config[actionType].actionUrl;
                 document.getElementById('actionInput').value = actionType;
                 form.submit();
+            }
+        });
+    }
+        function confirmDestroy(userId){
+        Swal.fire({
+            title: 'Xác nhận xoá tài khoản',
+            text: `Bạn có chắc chắn muốn xoá tài khoản không?`,
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ',
+            showCancelButton: true,
+            icon: 'question'
+        }).then((result)=>{
+            if(result.isConfirmed){
+                document.getElementById(`destroy-form-${userId}`).submit();
             }
         });
     }
