@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
+use App\Http\Middleware\Require2FAConfirmation;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,7 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'is_admin' => IsAdmin::class,
-            'is_user' => IsUser::class
+            'is_user' => IsUser::class,
+            '2fa_confirmed' => Require2FAConfirmation::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

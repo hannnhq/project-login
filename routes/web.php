@@ -32,12 +32,19 @@ Route::middleware(['auth','is_admin'])->group(function(){
     Route::get('/admin/change-password',[ChangePasswordController::class,'showFormChangeAdmin'])->name('admin.changepassword.form');
     Route::post('/admin/change-password',[ChangePasswordController::class,'changePassword'])->name('admin.changepassword');
 
+    Route::middleware('2fa_confirmed')->group(function(){
     Route::get('/admin/list-account', [AdminDashboardController::class, 'listAccount'])->name('admin.list-account');
     Route::get('/admin/account/{id}/detail', [AdminDashboardController::class, 'detailAccount'])->name('admin.detail-account');
     Route::delete('/admin/account/{id}/destroy',[AdminDashboardController::class, 'destroy'])->name('admin.account.destroy');
     Route::post('/admin/account/{id}/lock', [AdminDashboardController::class, 'updateAccountStatus']);
     Route::post('/admin/account/{id}/unlock', [AdminDashboardController::class, 'updateAccountStatus']);
 });
+
+});
+
+Route::get('/2fa/sensitive-verify', [LoginController::class, 'show2FAForm'])->name('2fa.sensitive.form');
+Route::post('/2fa/sensitive-verify', [LoginController::class, 'verify'])->name('2fa.sensitive.verify');
+
 
 Route::get('/login',[LoginController::class, 'index'])->name('login');
 Route::post('/login',[LoginController::class, 'login'])->name('login.submit');
@@ -56,6 +63,7 @@ Route::post('/admin/signup',[SignupController::class, 'storeAdmin'])->name('sign
 
 Route::post('/logout', function () {
     Auth::logout();
+    session()->forget(['2fa_confirmed', '2fa:admin:id']);
     return redirect()->route('login')->with('success', 'Đăng xuất thành công');
 })->name('logout');
 
